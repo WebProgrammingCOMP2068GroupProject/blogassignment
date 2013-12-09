@@ -20,7 +20,9 @@ $_SESSION['userName'];
 </head>
 <?php require_once('php/dbConnection.php');?> <!-- Open the database connection-->
 <a href="index.php"><img src="" alt="Logo"/></a> <!-- Change the logo here! -->
-<?php if ((empty($_SESSION['password'])) || (empty($_SESSION['userName']))){
+<?php 
+if ((!empty($_SESSION['password'])) || (!empty($_SESSION['userName']))){
+echo'<div id="userLogin">Welcome '.$_SESSION['userName'].'<a href="login.php">Log Out</a></div>';
 echo'<nav>
 		<ul>
 			<li href="">Post a Blog</li> <!-- Post a blog -->
@@ -29,6 +31,10 @@ echo'<nav>
 			<li href="">Contact Us</li> <!-- Contact Us -->
 		</ul>
 	</nav>';
-}?>
+}
+else{
+	echo'<div id="userLogin">Welcome Guest <a href="login.php">Login</a></div>';
+}
+?>
 <body>
 <!-- -------------------------------------------------------------------------------------- -->

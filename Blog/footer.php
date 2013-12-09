@@ -6,7 +6,6 @@
     <!-- ---------------------------------------------------------------------------- -->
     <footer>
         <p>Matthew Rowlandson, Calin Cohan, Kevin Kan &copy 2013</p>
-        <small><a href="contactus.php">Contact Us</a></small>
     </footer>
     </body>
     <?php $database = null; ?> <!-- Close the database connection-->
