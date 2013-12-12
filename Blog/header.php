@@ -29,16 +29,16 @@ $currentPage=preg_replace($fileTypes,'', basename($_SERVER['SCRIPT_NAME']));
     <script src="js/javascript.js"></script>
 </head>
 <?php require_once('php/dbConnection.php');?> <!-- Open the database connection-->
-<a href="index.php"><img src="" alt="Logo"/></a> <!-- Change the logo here! -->
+<a href="index.php"><img src="imgs/logo.png" alt="Logo"/></a> <!-- Change the logo here! -->
 <?php 
 if ((!empty($_SESSION['password'])) || (!empty($_SESSION['userName']))){
 echo'<div id="userLogin">Welcome '.$_SESSION['userName'].'<a href="login.php">Log Out</a></div>';
 echo'<nav>
 		<ul>
-			<li href="">Post a Blog</li> <!-- Post a blog -->
-			<li href="">Manage A Blog</li> <!-- Manage a blog -->
-			<li href="">My Profile</li> <!-- My Profile -->
-			<li href="">Contact Us</li> <!-- Contact Us -->
+			<li><a href="editBlog.php">Post a Blog</a></li> <!-- Post a blog -->
+			<li><a href="manageBlog.php">Manage A Blog</a></li> <!-- Manage a blog -->
+			<li><a href="profile.php">My Profile</a></li> <!-- My Profile -->
+			<li><a href="contactus.php">Contact Us</a></li> <!-- Contact Us -->
 		</ul>
 	</nav>';
 }

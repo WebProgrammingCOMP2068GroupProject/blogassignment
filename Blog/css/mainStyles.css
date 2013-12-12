@@ -14,6 +14,13 @@ root {
 	float: right;
 	position: relative;
 }
+/******************General Styles*********************/
+h4{
+	margin:0;
+}
+html{
+	font-family: sans-serif;
+}
 /***************index.php styles***********************/
 #pageContent{
 	width: 100%;
@@ -37,6 +44,7 @@ root {
 	border: 2px solid;
 	padding: 10px;
 	border-radius: 8px;
+	margin: 4px 0;
 }
 #showHidePostButton{
 	margin-left:25%;
@@ -52,6 +60,21 @@ root {
 #prevButton{
 	float:left;
 }
+#postCommentForm{
+	width: 55%;
+	margin-left:25%;
+	min-width: 150px;
+	background: #4c71f7;
+	border: 2px solid black;
+	padding: 10px;
+	border-radius: 8px;
+}
+#postCommentForm label{
+	width:100%;
+	text-align:left;
+	clear:both;
+}
+/*****************footer styles**************************/
 footer{
 	text-align:center;
 	margin:auto;
