@@ -3,6 +3,8 @@ session_start();
 //link a passord and username session
 $_SESSION['password'];
 $_SESSION['userName'];
+$fileTypes=array("/.php$/","/.html$/");
+$currentPage=preg_replace($fileTypes,'', basename($_SERVER['SCRIPT_NAME']));
  ?>
 <!-- 
     Authors: Matthew Rowlandson, Calin Cohan, Kevin Kan
@@ -16,6 +18,14 @@ $_SESSION['userName'];
     <title>The Blogging Site</title>
     <!-- Stylesheet and Javascript Links-->
     <link href="css/mainStyles.css" rel="stylesheet" type="text/css"/>
+    <?php
+    //standard jquery script files
+    $scriptFiles=array('http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js');
+    //add external scripts
+    foreach($scriptFiles as $scriptName){
+    	echo"<script src='".$scriptName."' type='text/javascript'></script> \n";
+    }
+    if ($currentPage=="index"){echo"<script src='js/indexJs.js' type='text/javascript'></script>";}// if index base file load indexJs.js?>
     <script src="js/javascript.js"></script>
 </head>
 <?php require_once('php/dbConnection.php');?> <!-- Open the database connection-->

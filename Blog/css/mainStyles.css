@@ -9,4 +9,50 @@
 root { 
     display: block;
 }
-
+/******************Header Styles**********************/
+#userLogin{
+	float: right;
+	position: relative;
+}
+/***************index.php styles***********************/
+#pageContent{
+	width: 100%;
+	clear: both;
+}
+#pageContent a {
+	text-decoration:none;
+}
+.recentBlogs{
+	margin-left: 20%;
+	width: 60%;
+	min-width: 200px;
+}
+#oldPosts{
+	width: 55%;
+	margin-left:25%;
+	min-width: 150px;
+}
+.posts{
+	background: rgb(228, 228, 248);
+	border: 2px solid;
+	padding: 10px;
+	border-radius: 8px;
+}
+#showHidePostButton{
+	margin-left:25%;
+}
+#pageButtons{
+	margin:auto;
+	width:60%;
+	display: block;
+}
+#nextButton{
+	float:right;
+}
+#prevButton{
+	float:left;
+}
+footer{
+	text-align:center;
+	margin:auto;
+}
