@@ -14,21 +14,71 @@ root {
 	float: right;
 	position: relative;
 }
+#headerLogo{
+	float:left;
+}
+nav {
+	background: #000000;/*Black*/
+	width: 15%;
+	max-width: 400px;
+	min-width: 100px;
+	height: 100%;
+	position: relative;
+	display:block;
+	float:left;
+	clear: both;
+}
+nav>ul>li a,nav>ul>li {
+	list-style: none;
+	width:95%;
+	max-width: 390px;
+	min-width: 90px;
+	height: 40px;
+	position: relative;
+	float: left;
+	border: 1px solid #4646E2;/*off blue*/
+	border-radius: 5px;
+	background: #4646E2;/*off blue*/
+	margin: 2px 1.5%;
+	text-align: center;
+	font-family: 'Times New Roman',sans-serif;
+	font-size: 25px;
+	line-height: 1.6;
+	text-decoration: none;
+	color: #000000;/*Black*/
+	color: white;
+	display: block;
+}
+nav>ul>li{
+	margin-top:2px;
+}
+nav ul{
+	padding:0;
+	margin:0;
+}
+
 /******************General Styles*********************/
 h4{
 	margin:0;
 }
 html{
 	font-family: sans-serif;
+    height:100%;
 }
-/***************index.php styles***********************/
-#pageContent{
-	width: 100%;
-	clear: both;
+body { 
+    min-height:100%;
+}
+#pageContent {
+	position: relative;
+	float: left;
+	width: 75%;
+	min-width: 100px;
+	padding: 0 0 0 1.5%;
 }
 #pageContent a {
 	text-decoration:none;
 }
+/***************index.php styles***********************/
 .recentBlogs{
 	margin-left: 20%;
 	width: 60%;
@@ -74,8 +124,40 @@ html{
 	text-align:left;
 	clear:both;
 }
+/*****************editBlog.php************************/
+#alterBlogForm{
+	width: 80%;
+	margin-left: 10%;
+	min-width: 300px;
+	background: #4c71f7;
+	border: 2px solid black;
+	padding: 10px;
+	border-radius: 8px;
+	display: block;
+	height: 100%;
+}
+#alterBlogForm label{
+	width: 100%;
+	float: left;
+}
+#alterBlogForm input[type="text"]{
+	float: left;
+	width: 50%;
+}
+#alterBlogForm textarea{
+	width: 99%;
+	display: block;
+	height: 220px;
+}
 /*****************footer styles**************************/
 footer{
-	text-align:center;
-	margin:auto;
+	font-size:0.75em;
+	clear: both;
+}
+footer p{
+	margin: auto;
+	display: block;
+	position: relative;
+	width: 100%;
+	text-align: center;
 }

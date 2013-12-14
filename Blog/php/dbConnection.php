@@ -1,4 +1,8 @@
 <?php 
+/**Authors Kevin Kan 
+ * Date Dec 13 2013
+* This handles all the database connecitons for the site.
+*/
 	try{
 		$mySQLUsername = "db200240236";
 		$mySQLPassword = "68069";

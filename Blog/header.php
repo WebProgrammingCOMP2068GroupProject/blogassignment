@@ -29,9 +29,9 @@ $currentPage=preg_replace($fileTypes,'', basename($_SERVER['SCRIPT_NAME']));
     <script src="js/javascript.js"></script>
 </head>
 <?php require_once('php/dbConnection.php');?> <!-- Open the database connection-->
-<a href="index.php"><img src="imgs/logo.png" alt="Logo"/></a> <!-- Change the logo here! -->
+<a id='headerLogo' href="index.php"><img src="imgs/logo.png" alt="Logo"/></a> <!-- Change the logo here! -->
 <?php 
-if ((!empty($_SESSION['password'])) || (!empty($_SESSION['userName']))){
+if ((!empty($_SESSION['password'])) && (!empty($_SESSION['userName']))){
 echo'<div id="userLogin">Welcome '.$_SESSION['userName'].'<a href="login.php">Log Out</a></div>';
 echo'<nav>
 		<ul>

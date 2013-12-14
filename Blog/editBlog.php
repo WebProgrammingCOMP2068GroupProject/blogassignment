@@ -1,5 +1,5 @@
 <?php
-/**Author Kevin Kan
+/**Author Kevin Kan, Matt R. Calin C.
  * Date Dec 12 2013
  * Tis file edits and creates new blogs depending on the getter vars. 
  */
@@ -60,7 +60,8 @@ if($userLoggedIn){
 	}
 	if(isset($_GET['editBlog'])){
 		$newBlog=false;
-		$getEditBlogSql="SELECT * FROM blogTable AS BT INNER JOIN blogAccounts AS BA ON BA.accountID = BT.ownerID WHERE blogLock!=2 AND blogID=".$_GET['editBlog']."AND userName='".$_SESSION['userName']."' AND password='".$_SESSION['password']."'";
+		$getEditBlogSql="SELECT * FROM blogTable AS BT INNER JOIN blogAccounts AS BA ON BA.accountID = BT.ownerID WHERE blogLock!=2 AND blogID=".$_GET['editBlog']." AND userName='".$_SESSION['userName']."' AND password='".$_SESSION['password']."'";
+		//echo$getEditBlogSql;
 		$getEditBlogQuery = $database->prepare($getEditBlogSql);
 		$getEditBlogQuery->execute();
 		while ($blogData = $getEditBlogQuery->fetch(PDO::FETCH_ASSOC))
@@ -76,12 +77,12 @@ if($userLoggedIn){
 	if($showForm){
 ?>
 <div id='pageContent'>
-<form action='editBlog.php' method='POST' enctype='multipart/form-data'>
+<form id="alterBlogForm" action='editBlog.php' method='POST' enctype='multipart/form-data'>
 <input type='hidden' name='editBlogID' value="<?php echo$blogDataId ?>"/>
-<label></label>
+<label for='blogTitle'>Blog Title</label>
 <input type='text' name='blogTitle' value='<?php echo$blogTitle;?>' maxlength='100'/>
-<label></label>
-<textarea name='blogContent' value='<?php echo$blogContent;?>' maxlength='3000'></textarea>
+<label for='blogContent'>Blog Content</label>
+<textarea name='blogContent' maxlength='3000'><?php echo$blogContent;?></textarea>
 <input type="submit" name='submit' value='<?php echo($newBlog)?"Create Blog":"Update Blog"; ?>'/>
 </form>
 </div>

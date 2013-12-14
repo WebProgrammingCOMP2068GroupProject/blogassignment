@@ -52,6 +52,7 @@ elseif($userLoggedIn){
  ?>
 <div id='pageContent'>
 <?php
+$isOpen=true;
 $initialSql="SELECT * FROM blogTable AS BT INNER JOIN blogAccounts AS BA ON BA.accountID = BT.ownerID ".$whereClause." ORDER BY dateCreated DESC ".$limitUser;
 //echo $initialSql;
 $initialQuery=$database->prepare($initialSql);
@@ -67,7 +68,8 @@ if($initialQueryCount>=1){
 			echo"<p>".$rowInitial['blogContent']."</p>";
 		echo"</div>";
 	}//end of while fetch row
-	if($initialQuery->rowCount==1){
+	if($initialQuery->rowCount()==1){
+		$isOpen=($rowInitial['blogLock']==0)?true:false;
 		$blogListSql="SELECT title,blogID FROM blogTable ".$whereClause;
 		$blogListQuery = $database->prepare($blogListSql);
 		$blogListQuery->execute();
@@ -91,7 +93,8 @@ else{
 if($initialQueryCount==1){
 echo"<button name='showPost' id='showHidePostButton'>View Comments</button>";
 echo"<div id='allPostsContainer'>";
-	if(($rowInitial['blogLock']==0)&&($userLoggedIn)){//if the user is logged in and blog is not locked
+	if(($isOpen)&&($userLoggedIn)){//if the user is logged in and blog is not locked
+
 		echo"<div id='postCommentForm'>
 			<form name='postCommentOnBlog' >
 				<input type='hidden' name='blogId'id='postBlogId' value='".$blogId."'/>
