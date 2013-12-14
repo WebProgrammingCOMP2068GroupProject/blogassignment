@@ -5,16 +5,24 @@
  */
 //include header
 require_once 'header.php';
+$userLoggedIn=(isset($_SESSION['password'])&&isset($_SESSION['userName']))?true:false;
+$host  = $_SERVER['HTTP_HOST'];
+$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+$page;
+
 $blogTitle;
 $blogDataId;
 $blogContent;
 $userAccount;
-$userLoggedIn=(isset($_SESSION['password'])&&isset($_SESSION['userName']))?true:false;
 $newBlog=true;
 $errMsg="";
 $showForm=true;
+$createBlogMsg="";
+$error="";
+$test="";
 
 if($userLoggedIn){
+
 	$getUserID="SELECT accountID FROM blogAccounts WHERE userName = '".$_SESSION['userName']."' AND  password ='".$_SESSION['password']."' LIMIT 1";
 	$getUserQuery= $database->prepare($getUserID);
 	$getUserQuery->execute();
@@ -24,7 +32,12 @@ if($userLoggedIn){
 	}
 	if($_POST['submit']=="Create Blog"){
 		$blogTitle=trim($_POST['blogTitle']);
-		$blogContent=trim($_POST['blogContent']);
+		$contentArray=explode("\n",trim($_POST['blogContent']));
+		$blogContent="";
+		$replaceTags=array("<p>","</p>");
+		foreach($contentArray as $paragraph){
+			$blogContent.="<p>".str_replace($replaceTags,"",$paragraph)."</p>";
+		}
 		$errMsg.=(empty($userAccount)||$userAccount<=0)?"User Account,":"";
 		$errMsg.=(empty($blogTitle))?"Blog Title,":"";
 		$errMsg.=(empty($blogContent))?"Blog Contents":"";
@@ -32,33 +45,52 @@ if($userLoggedIn){
 			$createBlogSql="INSERT INTO blogTable (ownerID,blogTitle,blogContent,blogLock) VALUES(".$userAccount.",'".$blogTitle."','".$blogContent."',0)";
 			$createBlogQuery= $database->prepare($createBlogSql);
 			$createBlogQuery->execute();
-			echo"<h3>New Blog Created</h3>";
+			$addLinkSql="SELECT blogID FROM blogTable WHERE blogLock!=2 ORDER BY dateCreated DESC LIMIT 1";
+			$addLinkQuery=$database->prepare($addLinkSql);
+			$addLinkQuery->execute();
+			echo"after select";
+			while ($addLinkRow = $addLinkQuery->fetch(PDO::FETCH_ASSOC))
+			{
+				$page = 'editBlog.php?editBlog='.$addLinkRow['blogID'].'&newBlog=true';
+				header("Location: http://$host$uri/$page");
+				exit();
+			}
 		}
 		else{
-			echo"<h3>An error involving ".$errMsg."has occured that is preventing the creation of a new blog. Please try again or contact the administrator </h3>";
+			$error="<h3>An error involving ".$errMsg."has occured that is preventing the creation of a new blog. Please try again or contact the administrator </h3>";
 		}
 	}
-	elseif($_POST['Update Blog']){
+	elseif($_POST['submit']=="Update Blog"){ 
 		$blogTitle=trim($_POST['blogTitle']);
-		$blogContent=trim($_POST['blogContent']);
+		$contentArray=explode("\n",trim($_POST['blogContent']));
+		$blogContent="";
+		$replaceTags=array("<p>","</p>");
+		foreach($contentArray as $paragraph){
+			$blogContent.="<p>".str_replace($replaceTags,"",$paragraph)."</p>";
+		}
 		$blogDataId=trim($_POST['editBlogID']);
-		
+	
 		$errMsg.=(empty($userAccount)||$userAccount<=0)?"User Account,":"";
 		$errMsg.=(empty($blogDataId))?" Blog Id,":"";
 		$errMsg.=(empty($blogTitle))?" Blog Title,":"";
 		$errMsg.=(empty($blogContent))?" Blog Contents":"";
-		
 		if($errMsg==""){
 			$createBlogSql="UPDATE blogTable SET blogTitle='".$blogTitle."',blogContent='".$blogContent."'WHERE blogID=".$blogDataId." AND ownerID=".$userAccount;
 			$createBlogQuery= $database->prepare($createBlogSql);
 			$createBlogQuery->execute();
-			echo"<h3>Blog Updated</h3>";
 		}
 		else{
-			echo"<h3>An error involving ".$errMsg."has occured that prevents the update of the blog. Please try again or contact the administrator </h3>";
+			$error="<h3>An error involving ".$errMsg."has occured that prevents the update of the blog. Please try again or contact the administrator </h3>";
 		}
 	}
+	
 	if(isset($_GET['editBlog'])){
+		if($_GET['newBlog']==true){
+			$createBlogMsg="<h3 id='blogChangeMessage'>New Blog Created! Check it out <a href='index.php?blog=".$_GET['editBlog']."'>here</a></h3>";
+		}
+		elseif($_GET['newBlog']=="updated"){
+			$createBlogMsg="<h3 id='blogChangeMessage'>Blog Updated</h3>";
+		}
 		$newBlog=false;
 		$getEditBlogSql="SELECT * FROM blogTable AS BT INNER JOIN blogAccounts AS BA ON BA.accountID = BT.ownerID WHERE blogLock!=2 AND blogID=".$_GET['editBlog']." AND userName='".$_SESSION['userName']."' AND password='".$_SESSION['password']."'";
 		//echo$getEditBlogSql;
@@ -75,9 +107,13 @@ if($userLoggedIn){
 		}
 	}
 	if($showForm){
+		echo $test;
 ?>
+
 <div id='pageContent'>
-<form id="alterBlogForm" action='editBlog.php' method='POST' enctype='multipart/form-data'>
+<h2><?php echo($newBlog)?"Create A Blog":"Update A Blog"; ?></h2>
+<?php echo$createBlogMsg; echo$error; ?>
+<form id="alterBlogForm" action='editBlog.php<?php echo (isset($_GET['editBlog']))?"?editBlog=".$_GET['editBlog']:""; echo(isset($_GET['newBlog']))?"&newBlog=".$_GET['newBlog']:""; ?>' method='POST' enctype='multipart/form-data'>
 <input type='hidden' name='editBlogID' value="<?php echo$blogDataId ?>"/>
 <label for='blogTitle'>Blog Title</label>
 <input type='text' name='blogTitle' value='<?php echo$blogTitle;?>' maxlength='100'/>

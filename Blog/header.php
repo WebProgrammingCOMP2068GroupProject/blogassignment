@@ -39,6 +39,8 @@ echo'<nav>
 			<li><a href="manageBlog.php">Manage A Blog</a></li> <!-- Manage a blog -->
 			<li><a href="profile.php">My Profile</a></li> <!-- My Profile -->
 			<li><a href="contactus.php">Contact Us</a></li> <!-- Contact Us -->
+			<li><a href="index.php">Home</a></li>
+			<li><a href="index.php?view=allUsers">View Other Blogs</a></li>
 		</ul>
 	</nav>';
 }

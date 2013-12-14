@@ -23,7 +23,6 @@ if($userLoggedIn){
 	if(isset($_POST['submit'])){
 		for ($i = 0; $i<$_POST['numberOfBlogs']; $i++){
 			$blogStatusSql="UPDATE blogTable SET blogLock =".$_POST['blogStatus'.$i]." WHERE blogID=".$_POST['blogStatusId'.$i]." AND ownerID =".$userAccount;
-			echo"Query: ".$blogStatusSql." <br/>";
 			$blogStatusQuery= $database->prepare($blogStatusSql);
 			$blogStatusQuery->execute();
 		}
@@ -41,7 +40,7 @@ if($userLoggedIn){
 	if($getBlogQuery->rowCount()>0){?>
 	<p>Below is a list of all your blogs. Click the title of your blog to see the blog post. Under "Status" section select if you want to
 open, close or delete your blog. Closed blogs can no longer be posted to unless they are turn back onto open. The final option for Blog Status is the delete checkbox.
-If the delete status is selected and form submitted, the blog is deleted. The "Edit?" area alows you to edit the contents of your blog by clicking
+If the delete status is selected and form submitted, the blog is deleted. The Edit area alows you to edit the contents of your blog by clicking
 on the link.</p>
 	<form id='mangeBlogForm' action='manageBlog.php' method='POST' enctype='multipart/form-data'>
 		<table>

@@ -15,7 +15,7 @@ $isPrevPage=false;
 $userAccount="";
 $blogId="";
 $indexUrl="http://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-
+date_default_timezone_set('Canada/Eastern');
 
 //check number of pages possible
 $countPageSql="SELECT CEIL(COUNT(blogId)/10) FROM blogTable";
@@ -49,6 +49,10 @@ elseif($userLoggedIn){
 	$limitUser="LIMIT 1";
 	$whereClause.="AND accountID =".$userAccount;
 }
+elseif($_GET['view']=="allUsers"){
+	$whereClause="WHERE blogLock !=2 ";
+	$limitUser="LIMIT 10";
+}
  ?>
 <div id='pageContent'>
 <?php
@@ -62,13 +66,21 @@ if($initialQueryCount>=1){
 	while ($rowInitial = $initialQuery->fetch(PDO::FETCH_ASSOC))
 	{	
 		$blogId=$rowInitial['blogID'];
+		$numChar=600;
+		if($initialQueryCount!=1){
+			$blogContent=(strlen($rowInitial['blogContent'])>$numChar)?substr($rowInitial['blogContent'],0,$numChar).'... <a href="'.$indexUrl.'/?blog='.$blogId.'">more &rsaquo;&rsaquo;</a>':$rowInitial['blogContent'];
+		}
+		else{
+			$blogContent=$rowInitial['blogContent'];
+		}
 		echo"<div class='recentBlogs'>";
 			echo"<h2 class='blogTitle'><a href='".$indexUrl."/?blog=".$blogId."'>".$rowInitial['blogTitle']."</a></h2>";
-			echo'<h3 class="blogAuthor"> by: '.$rowInitial['firstName'].' '.$rowInitial['lastName'].'</h3>';
-			echo"<p>".$rowInitial['blogContent']."</p>";
+			echo'<h3 class="blogAuthor"> By: '.$rowInitial['firstName'].' '.$rowInitial['lastName'].'</h3>';
+			echo'<h3 class="blogDate"> Created: '.date('M j Y g:i A', strtotime($rowInitial['dateCreated'])).'</h3>';
+			echo"<p>".$blogContent."</p>";
 		echo"</div>";
 	}//end of while fetch row
-	if($initialQuery->rowCount()==1){
+	if($initialQueryCount==1){
 		$isOpen=($rowInitial['blogLock']==0)?true:false;
 		$blogListSql="SELECT title,blogID FROM blogTable ".$whereClause;
 		$blogListQuery = $database->prepare($blogListSql);
