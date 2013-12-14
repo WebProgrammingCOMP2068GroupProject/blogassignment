@@ -10,11 +10,11 @@ $limitUser="LIMIT 10"; //default not signed in user then show limit of 10 entrie
 $listOfBlogs=array();
 $userLoggedIn=(isset($_SESSION['password'])&&isset($_SESSION['userName']))?true:false;
 $numPages="";
-$isNextPage=false;
+$isNextPage=true;
 $isPrevPage=false;
 $userAccount="";
 $blogId="";
-$indexUrl="http://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+$indexUrl="http://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['PHP_SELF']), '/\\')."/index.php";
 date_default_timezone_set('Canada/Eastern');
 
 //check number of pages possible
@@ -40,16 +40,16 @@ if(isset($_GET['blog'])){
 	$limitUser="LIMIT 1";
 	$whereClause.="AND blogId =".$_GET['blog'];
 }//see if user has selected a page for list of all blogs
-elseif(($_GET['page']>=0)&&($_GET['page']<=$numPages)){
+elseif((isset($_GET['page']))&&($_GET['page']>=0)&&($_GET['page']<=$numPages)){
 	$limitUser="LIMIT ".($_GET['page']*10).",10";
-	if(($_GET['page']>0)&&($_GET['page']<$numPages)){$isNextPage=true;}
-	if(($_GET['page']>1)&&($_GET['page']<=$numPages)){$isPrevPage=true;}
+	$isNextPage=($_GET['page']<$numPages)?true:false;
+	$isPrevPage=($_GET['page']>0)?true:false;
 }
 elseif($userLoggedIn){
 	$limitUser="LIMIT 1";
 	$whereClause.="AND accountID =".$userAccount;
 }
-elseif($_GET['view']=="allUsers"){
+if($_GET['view']=="allUsers"){
 	$whereClause="WHERE blogLock !=2 ";
 	$limitUser="LIMIT 10";
 }
@@ -74,25 +74,37 @@ if($initialQueryCount>=1){
 			$blogContent=$rowInitial['blogContent'];
 		}
 		echo"<div class='recentBlogs'>";
-			echo"<h2 class='blogTitle'><a href='".$indexUrl."/?blog=".$blogId."'>".$rowInitial['blogTitle']."</a></h2>";
+			echo"<h2 class='blogTitle'><a href='".$indexUrl."?blog=".$blogId."'>".$rowInitial['blogTitle']."</a></h2>";
 			echo'<h3 class="blogAuthor"> By: '.$rowInitial['firstName'].' '.$rowInitial['lastName'].'</h3>';
 			echo'<h3 class="blogDate"> Created: '.date('M j Y g:i A', strtotime($rowInitial['dateCreated'])).'</h3>';
 			echo"<p>".$blogContent."</p>";
+			echo($initialQueryCount==1)?"<button name='showPost' id='showHidePostButton'>View Comments</button>":"";
 		echo"</div>";
+		$isOpen=($rowInitial['blogLock']==0)?true:false;
 	}//end of while fetch row
 	if($initialQueryCount==1){
-		$isOpen=($rowInitial['blogLock']==0)?true:false;
-		$blogListSql="SELECT title,blogID FROM blogTable ".$whereClause;
+		$getAcountForBlogSql="SELECT ownerID FROM blogTable WHERE  blogLock !=2 AND blogID=".$blogId;
+		//echo$getAcountForBlogSql;
+		$getAcountForBlogQuery=$database->prepare($getAcountForBlogSql);
+		$getAcountForBlogQuery->execute();
+		$accountId;
+		while($rowAccount = $getAcountForBlogQuery->fetch(PDO::FETCH_ASSOC)){
+			$accountId=$rowAccount['ownerID'];
+		}
+		$blogListSql="SELECT blogTitle,blogID FROM blogTable WHERE  blogLock !=2 AND ownerID =".$accountId;
+		//echo$blogListSql;
 		$blogListQuery = $database->prepare($blogListSql);
 		$blogListQuery->execute();
+		$listOfBlogs;
 		while ($rowBlogList = $blogListQuery->fetch(PDO::FETCH_ASSOC))
 		{
-			$listOfBlogs[$row['blogID']]= $row['title'];
+			$listOfBlogs[$rowBlogList['blogID']]= $rowBlogList['blogTitle'];
 		}
 		echo"<div id='blogTitleList'>
+			<h3>Blog Archive</h3>
 				<ul>";
 		foreach ($listOfBlogs as $blogIdKey => $blogListTile){
-			echo"<li><a href='".$indexUrl."/?blog=".$blogIdKey."'>".$blogListTile."</a></li>";
+			echo"<li><a href='".$indexUrl."?blog=".$blogIdKey."'>".$blogListTile."</a></li>";
 		}
 		echo"</ul></div>";
 	}//end if rowCount==1
@@ -103,7 +115,7 @@ else{
 //if only one blog entry
 //echo"blog counter = ".$initialQueryCount;
 if($initialQueryCount==1){
-echo"<button name='showPost' id='showHidePostButton'>View Comments</button>";
+$isNextPage=false;
 echo"<div id='allPostsContainer'>";
 	if(($isOpen)&&($userLoggedIn)){//if the user is logged in and blog is not locked
 
@@ -115,7 +127,7 @@ echo"<div id='allPostsContainer'>";
 				<label for='postComment'>Post Comment</label>
 				<textarea name='postComment' maxlength='2500' required></textarea>
 				<label for='securityText'>Prove Your not a bot, copy the text in the box</label>
-				<canvas id='securityCanvas' width=\"200\" height=\"100\" style=\"border:1px solid #d3d3d3;\">
+				<canvas id='securityCanvas' width=\"200\" height=\"50\" style=\"border:1px solid #d3d3d3;\">
 				Your browser does not support the HTML5 canvas tag.</canvas>
 				<input type='text' name='securityText' />
 				<button type='button' id='refreshSecurity' name='refreshSecurity'>Refresh Image</button>
@@ -134,15 +146,15 @@ echo"<div id='allPostsContainer'>";
 					<p>".$rowPosts['postContent']."</p></div>";
 		}
 	}
-	else{}
+	else{echo"<h4>No comments exist for this blog.</h4>";}
 	echo"</div>";
 echo"</div>";
 }
 ?>
 <div id='pageButtons'>
 <?php 
-echo($isNextPage)?"<a href='/".$indexUrl."/?page=".($_GET['page']+1)."' class='prevNextButtons' id='nextButton'>Next</a>":"";
-echo($isPrevPage)?"<a href='/".$indexUrl."/?page=".($_GET['page']-1)."'class='prevNextButtons' id='prevButton'>Prev</a>":"";
+echo($isNextPage)?"<a href='".$indexUrl."?page=".($_GET['page']+1)."' class='prevNextButtons' id='nextButton'>Next</a>":"";
+echo($isPrevPage)?"<a href='".$indexUrl."?page=".($_GET['page']-1)."'class='prevNextButtons' id='prevButton'>Prev</a>":"";
 ?>
 </div>
 </div>

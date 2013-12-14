@@ -32,7 +32,6 @@ $currentPage=preg_replace($fileTypes,'', basename($_SERVER['SCRIPT_NAME']));
 <a id='headerLogo' href="index.php"><img src="imgs/logo.png" alt="Logo"/></a> <!-- Change the logo here! -->
 <?php 
 if ((!empty($_SESSION['password'])) && (!empty($_SESSION['userName']))){
-echo'<div id="userLogin">Welcome '.$_SESSION['userName'].'<a href="login.php">Log Out</a></div>';
 echo'<nav>
 		<ul>
 			<li><a href="editBlog.php">Post a Blog</a></li> <!-- Post a blog -->
@@ -41,11 +40,16 @@ echo'<nav>
 			<li><a href="contactus.php">Contact Us</a></li> <!-- Contact Us -->
 			<li><a href="index.php">Home</a></li>
 			<li><a href="index.php?view=allUsers">View Other Blogs</a></li>
+			<li><a href="login.php">Logoff</a></li>
 		</ul>
 	</nav>';
 }
 else{
-	echo'<div id="userLogin">Welcome Guest <a href="login.php">Login</a></div>';
+	echo'<nav>
+		<ul>
+			<li><a href="login.php">Login</a></li>
+		</ul>
+	</nav>';
 }
 ?>
 <body>

@@ -52,9 +52,9 @@ if($("#postCommentForm").length!=0){//if posts are turned on
 	function drawSecurityCode(key){//draw captcha text in canvas
 		var c2=document.getElementById("securityCanvas");
 		var ctx2=c2.getContext("2d");
-		ctx2.clearRect(0,0,200,100);
+		ctx2.clearRect(0,0,200,50);
 		ctx2.font="30px Arial";
-		ctx2.fillText(key,10,50);
+		ctx2.fillText(key,10,40);
 	}
 	function newSecurityCode(){//random captcha key generator
 	    var newKey = '';

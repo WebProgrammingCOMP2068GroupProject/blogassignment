@@ -3,15 +3,15 @@
  * This is the login page to access regestered members content.
  */
 $(document).ready(function() {
-	$("#registerForm").hide();
+	$("#registerFormContainer").hide();
 	$("#toggleLogin").click(function(event){
 		event.preventDefault();
-		$("#registerForm").slideUp();
+		$("#registerFormContainer").slideUp();
 		$("#container").slideDown();
 	})
 	$("#toggleRegister").click(function(event){
 		event.preventDefault();
 		$("#container").slideUp();
-		$("#registerForm").slideDown();
+		$("#registerFormContainer").slideDown();
 	})
 })

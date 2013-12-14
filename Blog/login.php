@@ -97,7 +97,7 @@ $scriptFiles=array('http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.mi
 
 <body>	
 	<div id="container">
-		<img src="imgs/loginTop.png" class="center" />
+		<img src="imgs/logo.png" class="center" />
 		<form action="login.php" enctype="multipart/form-data"  method="post" id="form">
 		<?php echo$errMsg;?>
 			<label for="name">Username:</label>
@@ -109,8 +109,13 @@ $scriptFiles=array('http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.mi
 			<input type="submit" id='toggleRegister' value="Register" />
 			</div>
 		</form>
+		<div class="legalInfo">
+			<p>Matthew Rowlandson, Calin Cohan, Kevin Kan &copy 2013</p>
+        	<p>Return to home page click <a href='index.php'>here</a></p>
+        </div>
 	</div>
-	<div id='registerForm'>
+	<div id='registerFormContainer'>
+	<img src="imgs/logo.png" class="center" />
 	<form action="login.php" enctype="multipart/form-data"  method="post" id="registerForm">
 		<label for="firstName">First Name:</label>
 		<input type="name" name="firstName" value="<?php echo$firstName;?>" required/>
@@ -129,7 +134,10 @@ $scriptFiles=array('http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.mi
 			<input type="submit" name="Register" value="Register"/>
 		</div>  
 	</form>
+	<div class="legalInfo">
+		<p>Matthew Rowlandson, Calin Cohan, Kevin Kan &copy 2013</p>
+        <p>Return to home page click <a href='index.php'>here</a></p></div>
 	</div>
-
+	</div>
 </body>
 </html>
