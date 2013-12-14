@@ -34,13 +34,16 @@ if($userLoggedIn){
 		$blogTitle=trim($_POST['blogTitle']);
 		$contentArray=explode("\n",trim($_POST['blogContent']));
 		$blogContent="";
-		$replaceTags=array("<p>","</p>");
+		$replaceTags=array("<p>","</p>","'","\"");
+		$replaceWith=array("","","&prime;","&quot;");
 		foreach($contentArray as $paragraph){
-			$blogContent.="<p>".str_replace($replaceTags,"",$paragraph)."</p>";
+			$blogContent.="<p>".str_replace($replaceTags,$replaceWith,$paragraph)."</p>";
 		}
 		$errMsg.=(empty($userAccount)||$userAccount<=0)?"User Account,":"";
-		$errMsg.=(empty($blogTitle))?"Blog Title,":"";
-		$errMsg.=(empty($blogContent))?"Blog Contents":"";
+		$errMsg.=(empty($blogTitle))?"Blog Title is empty,":"";
+		$errMsg.=(strlen($blogTitle)>100)?"Blog Title is too long. Title can only have 100 characters,":"";
+		$errMsg.=(empty($blogContent))?"Blog Contents is empty":"";
+		$errMsg.=(strlen($blogContent)>3000)?"Blog Contents too long. The Blog can only have 3000 characters":"";
 		if($errMsg==""){
 			$createBlogSql="INSERT INTO blogTable (ownerID,blogTitle,blogContent,blogLock) VALUES(".$userAccount.",'".$blogTitle."','".$blogContent."',0)";
 			$createBlogQuery= $database->prepare($createBlogSql);
@@ -48,7 +51,7 @@ if($userLoggedIn){
 			$addLinkSql="SELECT blogID FROM blogTable WHERE blogLock!=2 ORDER BY dateCreated DESC LIMIT 1";
 			$addLinkQuery=$database->prepare($addLinkSql);
 			$addLinkQuery->execute();
-			echo"after select";
+			//echo"after".$createBlogSql;
 			while ($addLinkRow = $addLinkQuery->fetch(PDO::FETCH_ASSOC))
 			{
 				$page = 'editBlog.php?editBlog='.$addLinkRow['blogID'].'&newBlog=true';

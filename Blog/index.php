@@ -10,13 +10,6 @@ $limitUser="LIMIT 10"; //default not signed in user then show limit of 10 entrie
 $listOfBlogs=array();
 $userLoggedIn=(isset($_SESSION['password'])&&isset($_SESSION['userName']))?true:false;
 $numPages="";
-$isNextPage=true;
-$isPrevPage=false;
-$userAccount="";
-$blogId="";
-$indexUrl="http://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['PHP_SELF']), '/\\')."/index.php";
-date_default_timezone_set('Canada/Eastern');
-
 //check number of pages possible
 $countPageSql="SELECT CEIL(COUNT(blogId)/10) FROM blogTable";
 $countPageQuery= $database->prepare($countPageSql);
@@ -25,6 +18,12 @@ while ($countPageRow = $countPageQuery->fetch(PDO::FETCH_ASSOC))
 {
 	$numPages=$countPageRow['CEIL(COUNT(blogId)/10)'];
 }
+$isNextPage=($numPages>1)?true:false;
+$isPrevPage=false;
+$userAccount="";
+$blogId="";
+$indexUrl="http://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['PHP_SELF']), '/\\')."/index.php";
+date_default_timezone_set('Canada/Eastern');
 //if user is logged in get account number
 if($userLoggedIn){
 	$getUserID="SELECT accountID FROM blogAccounts WHERE userName = '".$_SESSION['userName']."' AND  password ='".$_SESSION['password']."' LIMIT 1";
@@ -68,7 +67,7 @@ if($initialQueryCount>=1){
 		$blogId=$rowInitial['blogID'];
 		$numChar=600;
 		if($initialQueryCount!=1){
-			$blogContent=(strlen($rowInitial['blogContent'])>$numChar)?substr($rowInitial['blogContent'],0,$numChar).'... <a href="'.$indexUrl.'/?blog='.$blogId.'">more &rsaquo;&rsaquo;</a>':$rowInitial['blogContent'];
+			$blogContent=(strlen($rowInitial['blogContent'])>$numChar)?substr($rowInitial['blogContent'],0,$numChar).'... <a href="'.$indexUrl.'?blog='.$blogId.'">more &rsaquo;&rsaquo;</a>':$rowInitial['blogContent'];
 		}
 		else{
 			$blogContent=$rowInitial['blogContent'];
