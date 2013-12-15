@@ -1,24 +1,25 @@
 <?php
-SESSION_START();
 //Matthew Rowlandson is doing this file!
 //NOTE: Still needs some more validation...
 require_once('header.php');
 if(!isset($_POST['name']) || !isset($_POST['email']) || !isset($_POST['message']))
  {
     ?>
-    <h2>Contact Us!</h2>
-    <div id="contactForm">
-        <form method="post" id="contactForm" action="<?php echo $PHP_SELF; ?>">
-            Your Name:<br>
-            <input type="text" name="name"><br>
-            Your Email:<br>
-            <input type="text" name="email"><br>
-            Message:<br>
-            <textarea name="message"></textarea><br>
-            <input type="submit" value="send">
-            <input type="reset" value="reset">
-        </form>
-    </div>
+    <div id='pageContent'>
+        <h2 id="contactHeader">Contact Us!</h2>
+        <div id="contactForm">
+            <form method="post" id="contactForm" action="<?php echo $PHP_SELF; ?>">
+                Your Name:<br>
+                <input type="text" name="name"><br>
+                Your Email:<br>
+                <input type="text" name="email"><br>
+                Message:<br>
+                <textarea name="message"></textarea><br>
+                <input type="submit" value="send">
+                <input type="reset" value="reset">
+            </form>
+        </div>
+    <div>
     <?php
  }
 if(isset($_POST['name']) && isset($_POST['email']) && isset($_POST['message']))
@@ -31,9 +32,9 @@ if(isset($_POST['name']) && isset($_POST['email']) && isset($_POST['message']))
     $mail_to =  "200219431@student.georgianc.on.ca";
     
     //manipulate the data from the form so it can be emailed...
-    if(isset($SESSION["username"]))
+    if(isset($_SESSION["userName"]))
     {
-        $subject = 'Message from User'.$SESSION["username"];
+        $subject = 'Message from User'.$_SESSION["userName"];
     }
     else{
         $subject = 'Message from Site Guest/'.$formName;
@@ -48,7 +49,10 @@ if(isset($_POST['name']) && isset($_POST['email']) && isset($_POST['message']))
     $headers .= "Reply-To: $formEmail\r\n";
     
     //mail function...
-    $mail_status = mail($mail_to, $subject, $message_body, $headers);
+    if((isset($_POST['name']) || isset($_POST['email']) || isset($_POST['message'])) && ($_POST['name'] != "" || $_POST['email'] != "" || $_POST['message'] != ""))
+    {
+        $mail_status = mail($mail_to, $subject, $message_body, $headers);
+    }
     
     //check if the email was delivered or not...
     if($mail_status) { 
