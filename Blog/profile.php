@@ -1,4 +1,8 @@
 <?php
+/*
+ * Author: Matthew Rowlandson
+ * Description: This is for the user to see their profile and to edit their password and email.
+ */
 //Matthew Rowlandson is doing this file!
 require_once('header.php');
 $userName = $_SESSION["userName"];

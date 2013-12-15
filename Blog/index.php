@@ -64,15 +64,16 @@ $initialQueryCount=$initialQuery->rowCount();
 if($initialQueryCount>=1){
 	while ($rowInitial = $initialQuery->fetch(PDO::FETCH_ASSOC))
 	{	
+		echo"<div class='recentBlogs'>";
 		$blogId=$rowInitial['blogID'];
 		$numChar=600;
 		if($initialQueryCount!=1){
 			$blogContent=(strlen($rowInitial['blogContent'])>$numChar)?substr($rowInitial['blogContent'],0,$numChar).'... <a href="'.$indexUrl.'?blog='.$blogId.'">more &rsaquo;&rsaquo;</a>':$rowInitial['blogContent'];
 		}
 		else{
+			echo '<h1>'.$rowInitial['firstName'].' '.$rowInitial['lastName']."'s Blog </h1>";
 			$blogContent=$rowInitial['blogContent'];
 		}
-		echo"<div class='recentBlogs'>";
 			echo"<h2 class='blogTitle'><a href='".$indexUrl."?blog=".$blogId."'>".$rowInitial['blogTitle']."</a></h2>";
 			echo'<h3 class="blogAuthor"> By: '.$rowInitial['firstName'].' '.$rowInitial['lastName'].'</h3>';
 			echo'<h3 class="blogDate"> Created: '.date('M j Y g:i A', strtotime($rowInitial['dateCreated'])).'</h3>';

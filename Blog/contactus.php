@@ -1,5 +1,8 @@
 <?php
-//Matthew Rowlandson is doing this file!
+/*
+ * Author: Matthew Rowlandson
+ * Description: This is the contact email form for getting in touch the the websites admin. (aka matthew rowlandson atm...)
+ */
 //NOTE: Still needs some more validation...
 require_once('header.php');
 if(!isset($_POST['name']) || !isset($_POST['email']) || !isset($_POST['message']))
